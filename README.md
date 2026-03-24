@@ -12,14 +12,14 @@ PHP's `version_compare('3.5', '3.41')` returns `-1` (meaning 3.5 < 3.41), becaus
 composer require patchstack/version-compare
 ```
 
-For private repo access, add the VCS repository to your `composer.json`:
+Since this package is not on Packagist, add the VCS repository to your `composer.json`:
 
 ```json
 {
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:patchstack/version-compare.git"
+            "url": "https://github.com/patchstack/version-compare.git"
         }
     ]
 }
@@ -124,6 +124,21 @@ $checker->execute('9.x-3.4', '<= 8.x-3.5');  // false (different major)
 ```bash
 composer test
 ```
+
+## Contributing
+
+This package is maintained by the Patchstack engineering team. Changes should be made via pull request with tests.
+
+When adding new version format support:
+1. Add test cases covering the new format in the relevant test file
+2. Ensure all existing tests still pass
+3. Update this README's "Supported Version Formats" table
+
+Version bumps follow semver. Breaking changes to the public API require a major version bump since multiple codebases depend on `^1.0`.
+
+## License
+
+MIT - see [LICENSE](LICENSE)
 
 ## Requirements
 
