@@ -9,7 +9,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Tests
+    strategy:
+      matrix:
+        php: ['8.2', '8.3', '8.4']
+    name: PHP ${{ matrix.php }}
 
     steps:
       - uses: actions/checkout@v4
@@ -17,7 +20,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: ${{ matrix.php }}
           coverage: none
 
       - name: Cache Composer dependencies
