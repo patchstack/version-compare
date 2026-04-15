@@ -2,16 +2,11 @@
 
 declare(strict_types=1);
 
-use Patchstack\VersionCompare\CompareVersions;
-use Patchstack\VersionCompare\NormalizeVersionPair;
-use Patchstack\VersionCompare\VersionStrategy;
+use Patchstack\VersionCompare\Comparators\DecimalComparator;
+use Patchstack\VersionCompare\Comparators\StandardComparator;
 
-beforeEach(function () {
-    $this->compare = new CompareVersions(new NormalizeVersionPair);
-});
-
-it('compares versions using standard strategy', function (string $v1, string $v2, string $op, bool $expected) {
-    expect($this->compare->execute($v1, $v2, $op))->toBe($expected);
+it('compares versions using standard comparator', function (string $v1, string $v2, string $op, bool $expected) {
+    expect((new StandardComparator())->compare($v1, $v2, $op))->toBe($expected);
 })->with([
     'less than: true' => ['1.0', '2.0', '<', true],
     'less than: false' => ['2.0', '1.0', '<', false],
@@ -23,8 +18,8 @@ it('compares versions using standard strategy', function (string $v1, string $v2
     'standard: 3.5 < 3.41 (PHP native behaviour)' => ['3.5', '3.41', '<', true],
 ]);
 
-it('compares versions using decimal normalized strategy', function (string $v1, string $v2, string $op, bool $expected) {
-    expect($this->compare->execute($v1, $v2, $op, VersionStrategy::DecimalNormalized))->toBe($expected);
+it('compares versions using decimal comparator', function (string $v1, string $v2, string $op, bool $expected) {
+    expect((new DecimalComparator())->compare($v1, $v2, $op))->toBe($expected);
 })->with([
     'decimal: 3.5 > 3.41 (normalized)' => ['3.5', '3.41', '>', true],
     'decimal: 3.5 < 3.41 is false' => ['3.5', '3.41', '<', false],

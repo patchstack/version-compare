@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Patchstack\VersionCompare\Drupal\DrupalVersionNormalizer;
+use Patchstack\VersionCompare\Normalizers\DrupalNormalizer;
 
 beforeEach(function () {
-    $this->normalizer = new DrupalVersionNormalizer;
+    $this->normalizer = new DrupalNormalizer;
 });
 
 it('strips major version prefixes', function (string $input, string $expected) {
@@ -18,7 +18,7 @@ it('strips major version prefixes', function (string $input, string $expected) {
 ]);
 
 it('checks major version matching', function (string $v1, string $v2, bool $expected) {
-    expect($this->normalizer->majorVersionsMatch($v1, $v2))->toBe($expected);
+    expect($this->normalizer->areCompatible($v1, $v2))->toBe($expected);
 })->with([
     'same major: 8.x' => ['8.x-3.0', '8.x-3.5', true],
     'different major: 8.x vs 9.x' => ['8.x-3.0', '9.x-3.5', false],

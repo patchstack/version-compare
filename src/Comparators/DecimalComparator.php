@@ -2,19 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Patchstack\VersionCompare;
+namespace Patchstack\VersionCompare\Comparators;
 
-final class NormalizeVersionPair
+use Patchstack\VersionCompare\Contracts\VersionComparator;
+
+/**
+ * Compares versions by treating each dot-separated segment as a decimal number.
+ *
+ * PHP's version_compare treats "3.5" < "3.41" (string comparison: "5" < "41").
+ * This comparator right-pads segments so "3.5" becomes "3.50", making 3.50 > 3.41.
+ */
+final class DecimalComparator implements VersionComparator
 {
+    public function compare(string $version1, string $version2, string $operator): bool
+    {
+        [$version1, $version2] = $this->padSegments($version1, $version2);
+
+        return version_compare($version1, $version2, $operator);
+    }
+
     /**
-     * Normalize two version strings by right-padding numeric segments to equal length.
-     *
-     * This ensures decimal-style versioning compares correctly:
-     * e.g., "3.5" vs "3.41" becomes "3.50" vs "3.41".
-     *
      * @return array{string, string}
      */
-    public function execute(string $version1, string $version2): array
+    private function padSegments(string $version1, string $version2): array
     {
         $segments1 = explode('.', $version1);
         $segments2 = explode('.', $version2);
